@@ -1,0 +1,80 @@
+class Client {
+
+    url:string
+
+    constructor(url:string) {
+        this.url = url;
+    }
+
+    async request(method:string, params:any):Promise<any>
+    async request(...args:any):Promise<Array<any>>
+    async request(...args:Array<any>):Promise<any> {
+        const requests:Array<{ method:string, params:Array<any> }> = [];
+        if (args.length == 2) {
+            push(requests, args[0], args[1]);
+            const [value] = await send(this.url, requests)
+            return value;
+        } else {
+            for (let i = 0; i < args.length >> 1; i++)
+                push(requests, args[i << 1], args[2 * i + 1]);
+            return send(this.url, requests);
+        }
+    }
+
+}
+
+function push(requests:Array<any>, method:string, params:any) {
+    requests.push({ method, params });
+}
+
+function _4e4030_(errors:Array<Error>, response:any) {
+    if (!("error" in response)) return;
+    const { code, message, data } = response.error
+    const error = new Error(`${code}: ${message}`)
+    if (data) error.cause = data
+    errors.push(error);
+}
+
+async function send(url:string, requests:Array<any>) {
+    const _02_ = new Array(requests.length);
+    for (let i = 0; i < requests.length; i++) {
+        _02_[i] = requests[i];
+        _02_[i].jsonrpc = "2.0";
+        _02_[i].id = i;
+    }
+    const headers = { "Content-Type": "application/json" };
+    const body = JSON.stringify(requests.length == 1 ? _02_[0] : _02_);
+    const response = await fetch(url, { method: "POST", headers, body });
+    const json = await response.json();
+    const errors = new Array<Error>();
+    if (_02_.length == 1) {
+            _4e4030_(errors, json);
+            _02_[0] = json.result;
+    } else {
+        for (let i = 0; i < _02_.length; i++) {
+            const request = json.find((_fc_:any) => _fc_.id == i);
+            if (request === undefined) {
+                const code = -32000;
+                const message = `response missing for request ${i}`;
+                const error = new Error(`${code}: ${message}`);
+                errors.push(error);
+                continue;
+            }
+            _4e4030_(errors, request);
+            _02_[i] = request.result;
+        }
+    }
+    if (errors.length) throw new AggregateError(errors);
+    return _02_;
+}
+
+const client = new Client("localhost:8545");
+console.log(await client.request(
+    "eth_blockNumber", [],
+    "eth_getBalance", ["0x43e6e60706cd7c33440ec5a0b1159708a80e308f", "latest"]
+));
+
+// push(requests, "eth_getBalance", ["0x43e6e60706cd7c33440ec5a0b1159708a80e308f", "latest"]);
+
+
+export { Client };

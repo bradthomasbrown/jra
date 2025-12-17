@@ -1,7 +1,0 @@
-services:
-  api:
-    build:
-      context: ../../..
-      dockerfile: tests/serve-liveliness/api/Dockerfile
-    entrypoint: [ "deno" ]
-    command: [ "run", "--allow-net", "serve.ts" ]
