@@ -68,13 +68,4 @@ async function send(url:string, requests:Array<any>) {
     return _02_;
 }
 
-const client = new Client("localhost:8545");
-console.log(await client.request(
-    "eth_blockNumber", [],
-    "eth_getBalance", ["0x43e6e60706cd7c33440ec5a0b1159708a80e308f", "latest"]
-));
-
-// push(requests, "eth_getBalance", ["0x43e6e60706cd7c33440ec5a0b1159708a80e308f", "latest"]);
-
-
 export { Client };
