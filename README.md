@@ -11,6 +11,7 @@ npm i @bradthomasbrown/jra
 
 ## Usage
 ```js
+import { Client } from "@bradthomasbrown/jra";
 
 // provided you have a local EVM node running on port 8545
 const client = new Client("localhost:8545");
