@@ -6,18 +6,24 @@ class Client {
         this.url = url;
     }
 
-    async request(method:string, params:any):Promise<any>
-    async request(...args:any):Promise<Array<any>>
-    async request(...args:Array<any>):Promise<any> {
+    async request(method:string, params:any):Promise<string>
+    async request(...args:any):Promise<Array<string>>
+    async request(...args:any):Promise<string|Array<string>> {
+        return Client.request(this.url, ...args);
+    }
+
+    static async request(url:string, method:string, params:any):Promise<string>
+    static async request(url:string, ...args:any):Promise<Array<string>>
+    static async request(url:string, ...args:any):Promise<string|Array<string>> {
         const requests:Array<{ method:string, params:Array<any> }> = [];
         if (args.length == 2) {
             push(requests, args[0], args[1]);
-            const [value] = await send(this.url, requests)
+            const [value] = await send(url, requests)
             return value;
         } else {
             for (let i = 0; i < args.length >> 1; i++)
                 push(requests, args[i << 1], args[2 * i + 1]);
-            return send(this.url, requests);
+            return send(url, requests);
         }
     }
 
