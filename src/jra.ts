@@ -16,15 +16,9 @@ class Client {
     static async request(url:string, ...args:any):Promise<Array<string>>
     static async request(url:string, ...args:any):Promise<string|Array<string>> {
         const requests:Array<{ method:string, params:Array<any> }> = [];
-        if (args.length == 2) {
-            requests.push({ method:args[0], params:args[1] });
-            const value = await send(url, ...requests);
-            return value;
-        } else {
-            for (let i = 0; i < args.length; i+=2) requests.push({ method:args[i], params:args[i + 1] });
-            const values = await send(url, ...requests);
-            return values;
-        }
+        if (args.length == 2) requests.push({ method:args[0], params:args[1] });
+        else for (let i = 0; i < args.length; i+=2) requests.push({ method:args[i], params:args[i + 1] });
+        return await send(url, ...requests);
     }
 
 }
