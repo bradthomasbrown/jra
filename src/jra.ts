@@ -18,7 +18,7 @@ class Client {
         const requests:Array<{ method:string, params:Array<any> }> = [];
         if (args.length == 2) {
             requests.push({ method:args[0], params:args[1] });
-            const [value] = await send(url, ...requests);
+            const value = await send(url, ...requests);
             return value;
         } else {
             for (let i = 0; i < args.length; i+=2) requests.push({ method:args[i], params:args[i + 1] });
