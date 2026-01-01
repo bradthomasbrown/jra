@@ -82,7 +82,6 @@ async function sendBatchedRequests(url:string, requestInit:RequestInit, requests
     requestInit.body = JSON.stringify(_02_);
     const response = await fetch(url, requestInit);
     const json = await response.json();
-    json[1] = null;
     const errors:Array<Error> = [];
     const _54_ = new Array(requests.length);
     const _a8_:Set<number> = new Set();
