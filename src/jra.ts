@@ -9,18 +9,7 @@ class Client {
     async request(method:string, params:any):Promise<string>
     async request(...args:any):Promise<Array<string>>
     async request(...args:any):Promise<string|Array<string>> {
-        const error = new Error();
-        error.stack = error.stack!.split('\n').toSpliced(0, 2).join('\n');
-        const result = await Client.request(this.url, ...args).catch(e => e);
-        if (result instanceof AggregateError) {
-            result.stack! += "\n" + error.stack;
-            for (let i = 0; i < result.errors.length; i++) result.errors[i].stack += "\n" + error.stack;
-            throw result;
-        } else if (result instanceof Error) {
-            result.stack! += "\n" + error.stack;
-            throw result;
-        }
-        return result;
+        return await Client.request(this.url, ...args);
     }
 
     static async request(url:string, method:string, params:any):Promise<string>
